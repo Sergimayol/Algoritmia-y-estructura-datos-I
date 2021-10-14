@@ -111,14 +111,29 @@ public class Actividad1 extends JFrame {
     //usuario a través de la interficie gráfica.
     private class gestorAccionesIGU implements ActionListener {
 
+        private Cliente cliente;
+
+        public gestorAccionesIGU() {
+            cliente = new Cliente();
+        }
+
         @Override
         public void actionPerformed(ActionEvent ae) {
             switch (ae.getActionCommand()) {
                 case "Crear Cuenta":
-
+                    try {
+                        cliente.crearCuenta();
+                        System.out.println(cliente.toString());
+                    } catch (Exception e) {
+                        System.out.println(e.toString());
+                    }
                     break;
                 case "Eliminar Cuenta":
-
+                    try {
+                        cliente.eliminarCuenta(1);
+                        System.out.println(cliente.toString());
+                    } catch (Exception e) {
+                    }
                     break;
                 case "Visualizar Datos Cuenta":
 

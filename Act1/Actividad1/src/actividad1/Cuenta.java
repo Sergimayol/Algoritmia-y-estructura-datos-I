@@ -37,4 +37,10 @@ public class Cuenta {
     public void depositarDinero(int deposito) {
         saldo = saldo + deposito;
     }
+
+    @Override
+    public String toString() {
+        return "Cuenta{" + "idCuenta=" + idCuenta + ", saldo=" + saldo + '}';
+    }
+
 }
