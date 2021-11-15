@@ -13,7 +13,7 @@ public class Curso implements AccesoElemento {
 
     private String nombre;
     private String codigo;
-    ListaAsignaturas lista;
+    private ListaAsignaturas lista;
 
     public Curso(String nombre, String codigo) {
         this.nombre = nombre;
@@ -27,6 +27,18 @@ public class Curso implements AccesoElemento {
 
     public String getListaAsignaturas() {
         return lista.getInfoLista();
+    }
+
+    public void eliminarAsginatura(int i) {
+        lista.removeAsignatura(i);
+    }
+
+    public int getLengthLista() {
+        return lista.getLength();
+    }
+
+    public Asignatura getAsignatura(int i) {
+        return this.lista.getAsignatura(i);
     }
 
     @Override

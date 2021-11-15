@@ -9,11 +9,13 @@ public class Colegio {
     private String nombre;
     private ListaCursos lista;
     private int posCursoAux;
+    private int posAsignaturaAux;
 
     public Colegio(String nombre) {
         this.nombre = nombre;
         this.lista = new ListaCursos();
         posCursoAux = 0;
+        posAsignaturaAux = 0;
     }
 
     public String getNombre() {
@@ -106,13 +108,43 @@ public class Colegio {
         return curso;
     }
 
-    public void eliminarCurso(Curso c) {
+    public void eliminarAsignatura(Asignatura a, Curso c) {
         try {
-            lista.removeCurso(posCursoAux);
-            System.out.println("Curso eliminado con éxito.");
+            c.eliminarAsginatura(posAsignaturaAux);
+            System.out.println("Se ha eliminado la asignatura '" + a.getNombre()
+                    + "' del curso " + c.getNombre());
         } catch (Exception e) {
             System.out.println("Error: " + e.toString());
         }
+    }
+
+    public Asignatura buscarAsignatura(Curso c, String s) {
+        Asignatura a = null;
+        try {
+            for (int i = 0; i < c.getLengthLista(); i++) {
+                a = c.getAsignatura(i);
+                if (a.getCodigo().equals(s) || a.getNombre().equals(s)) {
+                    posAsignaturaAux = i;
+                    return a;
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Error: " + e.toString());
+        }
+        return a;
+    }
+
+    public void eliminarCurso(Curso c) {
+        lista.removeCurso(posCursoAux);
+        System.out.println("Curso eliminado con éxito." + c.getNombre());
+    }
+    
+    public int getListaLength(){
+        return lista.getLength();
+    }
+    
+    public Curso getCurso(int i){
+        return lista.getCurso(i);
     }
 
 }

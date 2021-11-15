@@ -43,6 +43,7 @@ public class Alg_Taller4 {
                     verAsignaturasCurso();
                     break;
                 case 6:
+                    verCursoAsignaturas();
                     break;
                 case 7:
                     break;
@@ -191,8 +192,37 @@ public class Alg_Taller4 {
     }
 
     private void darBajaAsignatura() {
+        String s, s2;
+        Curso c = null;
+        Asignatura a = null;
         try {
-            
+            System.out.println("¿Que asignatura quiere dar de baja?");
+            s = LT.readLine();
+            System.out.print("A que curso pertenece la asignatura: ");
+            s2 = LT.readLine();
+            c = cole.buscarCurso(s2);
+            a = cole.buscarAsignatura(c, s);
+            cole.eliminarAsignatura(a, c);
+        } catch (Exception e) {
+            System.out.println("Error: " + e.toString());
+        }
+    }
+
+    private void verCursoAsignaturas() {
+        String s;
+        Asignatura a;
+        Curso c;
+        try {
+            System.out.print("Asignatura a buscar: ");
+            s = LT.readLine();
+            for (int i = 0; i < cole.getListaLength(); i++) {
+                c = cole.getCurso(i);
+                a = cole.buscarAsignatura(c, s);
+                if (a != null) {
+                    break;
+                }
+            }
+            System.out.println();
         } catch (Exception e) {
             System.out.println("Error: " + e.toString());
         }

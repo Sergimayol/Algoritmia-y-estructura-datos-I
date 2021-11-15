@@ -27,6 +27,14 @@ public class ListaAsignaturas implements AccesoLista {
         this.listaAsignaturas = listaAsignaturas;
     }
 
+    public void removeAsignatura(int i) {
+        listaAsignaturas.remove(i);
+    }
+
+    public Asignatura getAsignatura(int i) {
+        return this.listaAsignaturas.get(i);
+    }
+
     @Override
     public void addAsignaturaLista(Asignatura asignatura) {
         listaAsignaturas.add(asignatura);
