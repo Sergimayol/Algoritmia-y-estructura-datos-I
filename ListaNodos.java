@@ -1,5 +1,3 @@
-package clases;
-
 /**
  *
  * @author Sergi
