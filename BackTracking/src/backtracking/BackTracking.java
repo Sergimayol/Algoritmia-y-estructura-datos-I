@@ -7,9 +7,14 @@ public class BackTracking {
     }
 
     private void inicio() {
-//        new NQueens(16);
-//        new KnightsTour(9);
+        long inicio = System.currentTimeMillis();
+        new NQueens(20);
+        new NQueens2(8);
+        new KnightsTour(8);
         new BackPack(8, 4);
+        long fin = System.currentTimeMillis();
+        double tiempo = (double) ((fin - inicio) / 1000);
+        System.out.println(tiempo + " segundos");
     }
 
 }

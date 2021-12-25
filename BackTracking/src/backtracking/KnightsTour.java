@@ -5,6 +5,8 @@
  */
 package backtracking;
 
+import java.util.Arrays;
+
 /**
  *
  * @author Sergi
@@ -81,27 +83,20 @@ public class KnightsTour {
 
     /* A recursive utility function to solve Knight
        Tour problem */
-    private boolean solveKTUtil(int x, int y, int movei,
-            int sol[][], int xMove[],
-            int yMove[]) {
+    private boolean solveKTUtil(int x, int y, int movei, int sol[][], int xMove[], int yMove[]) {
         int k, next_x, next_y;
         if (movei == N * N) {
             return true;
         }
-
-        /* Try all next moves from the current coordinate
-            x, y */
         for (k = 0; k < 8; k++) {
             next_x = x + xMove[k];
             next_y = y + yMove[k];
             if (isSafe(next_x, next_y, sol)) {
                 sol[next_x][next_y] = movei;
-                if (solveKTUtil(next_x, next_y, movei + 1,
-                        sol, xMove, yMove)) {
+                if (solveKTUtil(next_x, next_y, movei + 1, sol, xMove, yMove)) {
                     return true;
                 } else {
-                    sol[next_x][next_y]
-                            = -1; // backtracking
+                    sol[next_x][next_y] = - 1; // backtracking
                 }
             }
         }
