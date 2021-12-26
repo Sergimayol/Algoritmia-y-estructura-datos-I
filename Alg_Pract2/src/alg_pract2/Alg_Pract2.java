@@ -1,18 +1,19 @@
 package alg_pract2;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.Toolkit;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.WindowConstants;
 
 /**
  *
@@ -20,108 +21,80 @@ import javax.swing.JPanel;
  */
 public class Alg_Pract2 extends JFrame implements ActionListener {
 
-    private Container panelContenidos;
-    private JPanel panelPrincipal;
     private Tablero tablero[];
     private int numSoluciones;
+    private JButton btn_anterior;
+    private JButton btn_siguiente;
+    private JPanel contenedor;
+    private JPanel jPanel1;
+    private int cont = 0;
+    private boolean finIncio;
+    private int tamTablero;
 
-    public static void main(String[] args) {
-        new Alg_Pract2().inicio();
+    public static void main(String args[]) throws UnsupportedLookAndFeelException {
+        /* Set the Nimbus look and feel */
+        try {
+            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(Alg_Pract2.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(() -> {
+            new Alg_Pract2().setVisible(true);
+        });
     }
 
     public Alg_Pract2() {
-        this.panelPrincipal = new JPanel();
-        this.panelPrincipal.setLayout(new BorderLayout());
-    }
-
-    //Método principal
-    private void inicio() {
+        this.finIncio = false;
+        while (!finIncio) {
+            lecturaDatosIniciales();
+        }
         getAllTableros();
-        configVentana();
-        configMenuBar();
-    }
-
-    //Configuración de la ventana gráfica
-    private void configVentana() {
-        //Añadimos un titulo a la ventana
         setTitle("PRACTICA 2 - BACKTRACKING");
-        //Alamacena en la variable nuestro sistema nativo de ventanas
-        Toolkit pantalla = Toolkit.getDefaultToolkit();
-        //Tamañano de la pantalla del usuario
-        Dimension tampant = pantalla.getScreenSize();
-        //Obtener el alto de resolución de pantalla
-        int altpant = tampant.height;
-        //Obtener el ancho de resolución de pantalla
-        int anchopant = tampant.width;
-        //Localización(x,y) + tamaño(ancho,alto). De esta manera siempre
-        //la ventana estará situada en el centro
-        setBounds(anchopant / 4, altpant / 4, anchopant / 2, altpant / 2);
-        //Activar el cierre interactivo del contenedor JFrame ventana para finalizar
-        //ejecución
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        //Asignación al objeto Container panelContenidos DEL PANEL JContentPane 
-        //del JFrame 
-        panelContenidos = getContentPane();
-        //asignación administrador de Layout BordeLayout al panel de contenidos
-        //del JFrame
-        panelContenidos.setLayout(new BorderLayout());
-        panelPrincipal.add(tablero[0], BorderLayout.CENTER);
-        panelContenidos.add(panelPrincipal, BorderLayout.CENTER);
-        //Activar visualización contenedor JFrame ventana
-        setVisible(true);
+        initComponents();
+        this.setLocationRelativeTo(null);
+        btn_anterior.addActionListener(this);
+        btn_siguiente.addActionListener(this);
+        contenedor.add(tablero[0]);
+        deshabilitarBoton();
     }
 
-    //Este método es el encargado de la gestión de acciones y configuración 
-    //de los botones del menuBar. 
-    private void configMenuBar() {
-        //CONFIGURACIÓN CONTENEDOR JPanel contenedor del panelMenu
-        JPanel panelMenu = new JPanel();
-        panelMenu.setBackground(Color.LIGHT_GRAY);
-        panelMenu.setLayout(new BorderLayout());
-
-        //DECLARACIÓN COMPONENTE JMenuBar (barra de menu)
-        JMenuBar barraMenu = new JMenuBar();
-
-        //DECLARACIÓN Y CONFIGURACIÓN COMPONENTES JMENUS DE LA BARRA DE MENU
-        JMenu opciones = new JMenu("Opciones");
-
-        //DECLARACIÓN OPCIONES JMenuItem
-        JMenuItem salir = new JMenuItem("Salir");
-        JMenuItem soluciones = new JMenuItem("Soluciones");
-
-        //Asociación componente JMenuItem, con gestor de evento gestorEventoMenu
-        salir.addActionListener(this);
-        soluciones.addActionListener(this);
-
-        //Asignación componentes JMenuItem con su correspondiente JMenu
-        opciones.add(soluciones);
-        opciones.add(salir);
-
-        //Introducción de la componentes JMenu en el JMenuBar
-        barraMenu.add(opciones);
-        //Introducción de la componentes JMenuBar en el JPanel
-        panelMenu.add(barraMenu, BorderLayout.SOUTH);
-
-        //Adicion del mapa y barraMenu al JPanel panelContenidos
-        panelContenidos.add(panelMenu, BorderLayout.NORTH);
+    private void lecturaDatosIniciales() {
+        String[] datosVentana = {"Tamaño del tablero: "};
+        try {
+            datosVentana = new lecturaDatos(this, datosVentana, "Escriba un tamaño para el tablero", true).getDatosTexto();
+            if (!datosVentana[0].isEmpty()) {
+                tamTablero = Integer.parseInt(datosVentana[0]);
+            } else {
+                tamTablero = 4;
+            }
+            this.finIncio = true;
+        } catch (NumberFormatException e) {
+            System.out.println("Error: " + e.toString());
+        }
     }
 
     private void getAllTableros() {
-        NQueens2 q = new NQueens2(4);
+        NQueens2 q = new NQueens2(tamTablero);
         q.inicio();
         this.numSoluciones = NQueens2.getAccount();
         this.tablero = new Tablero[this.numSoluciones];
         ArrayList aux = q.getSoluciones();
         int n = q.getN();
-        int cont = 0;
+        int indice = 0;
         int[][] tableroaux = null;
         boolean inicio = true;
         int fila = 0, columna = 0;
         for (int i = 0; i < aux.size(); i++) {
             if (i % (n * n) == 0) {
 //                System.out.println();
-                if (!inicio && cont <= NQueens2.getAccount()) {
-                    this.tablero[cont++] = new Tablero(tableroaux, NQueens2.getAccount());
+                if (!inicio && indice <= NQueens2.getAccount()) {
+                    this.tablero[indice++] = new Tablero(tableroaux, NQueens2.getAccount());
                 }
                 if (tableroaux != null) {
 //                    System.out.println(Arrays.deepToString(tableroaux));
@@ -143,45 +116,78 @@ public class Alg_Pract2 extends JFrame implements ActionListener {
             tableroaux[fila][columna++] = (int) aux.get(i);
         }
 //        System.out.println("\n" + Arrays.deepToString(tableroaux));
-        this.tablero[cont] = new Tablero(tableroaux, NQueens2.getAccount());
+        this.tablero[indice] = new Tablero(tableroaux, NQueens2.getAccount());
+    }
+
+    private void deshabilitarBoton() {
+        if (tablero[0].isVisible()) {
+            btn_siguiente.setEnabled(true);
+            btn_anterior.setEnabled(false);
+        } else if (tablero[tablero.length - 1].isVisible()) {
+            btn_anterior.setEnabled(true);
+            btn_siguiente.setEnabled(false);
+        } else {
+            btn_anterior.setEnabled(true);
+            btn_siguiente.setEnabled(true);
+        }
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     */
+    @SuppressWarnings("unchecked")
+    private void initComponents() {
+        contenedor = new JPanel();
+        jPanel1 = new JPanel();
+        btn_anterior = new JButton();
+        btn_siguiente = new JButton();
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setPreferredSize(new Dimension(744, 523));
+        contenedor.setLayout(new BorderLayout());
+        btn_anterior.setFont(new Font("Tahoma", 1, 14)); // NOI18N
+        btn_anterior.setIcon(new ImageIcon(getClass().getResource("/imagenes/previous.png"))); // NOI18N
+        btn_anterior.setText("Anterior");
+        jPanel1.add(btn_anterior);
+        btn_siguiente.setFont(new Font("Tahoma", 1, 14)); // NOI18N
+        btn_siguiente.setIcon(new ImageIcon(getClass().getResource("/imagenes/next.png"))); // NOI18N
+        btn_siguiente.setText("Siguiente");
+        btn_siguiente.setHorizontalTextPosition(SwingConstants.LEFT);
+        jPanel1.add(btn_siguiente);
+        contenedor.add(jPanel1, BorderLayout.SOUTH);
+        getContentPane().add(contenedor, BorderLayout.CENTER);
+        pack();
     }
 
     @Override
     public void actionPerformed(ActionEvent ae) {
-        switch (ae.getActionCommand()) {
-            case "Soluciones":
-                String[] datosventana = {"Número solución a ver: "};
-                String titulo = "Dispone de " + this.numSoluciones + " soluciones";
-                boolean entradaCorrecta = false;
-                int entrada = 0;
-                try {
-                    while (!entradaCorrecta) {
-                        datosventana = new lecturaDatos(this, datosventana, titulo, true).getDatosTexto();
-                        if (!datosventana[0].isEmpty()) {
-                            entrada = Integer.parseInt(datosventana[0]);
-                        }
-                        if (entrada >= 0 && entrada <= this.numSoluciones) {
-                            entradaCorrecta = true;
-                        }
-                    }
-                    this.panelPrincipal.add(this.tablero[entrada], BorderLayout.CENTER);
-                    this.tablero[entrada].setVisible(true);
-                    for (int i = 0; i < this.tablero.length; i++) {
-                        if (i == entrada) {
-                            this.tablero[i].setVisible(false);
-                        }
-                    }
-                    this.panelPrincipal.validate();
-                } catch (NumberFormatException e) {
-                    System.out.println("Error: " + e.toString());
-                }
-                break;
-            case "Salir":
-                System.exit(0);
-                break;
-            default:
-                throw new AssertionError();
-        }
-    }
 
+        Object evt = ae.getSource();
+        if (evt.equals(btn_anterior)) {
+            cont--;
+            contenedor.add(tablero[cont]);
+            tablero[cont].setVisible(true);
+            for (int i = 0; i < tablero.length; i++) {
+                if (i != cont) {
+                    tablero[i].setVisible(false);
+                }
+            }
+            contenedor.validate();
+            deshabilitarBoton();
+
+        } else if (evt.equals(btn_siguiente)) {
+            cont++;
+            contenedor.add(tablero[cont]);
+            tablero[cont].setVisible(true);
+            for (int i = 0; i < tablero.length; i++) {
+                if (i != cont) {
+                    tablero[i].setVisible(false);
+                }
+            }
+            contenedor.validate();
+            deshabilitarBoton();
+
+        }
+        contenedor.repaint();
+//        System.out.println(cont);
+    }
 }

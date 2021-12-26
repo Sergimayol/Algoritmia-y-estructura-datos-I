@@ -33,10 +33,10 @@ public class Tablero extends JPanel {
                 for (int j = 0; j < tablero.length; j++) {
                     if (tablero[i][j] == 1) {
                         //Add reina
-                        this.casilla = new Casilla("sprite/queen.png");
+                        this.casilla = new Casilla("src/imagenes/queen.png");
                     } else {
                         //Add nada
-                        this.casilla = new Casilla("sprite/none.png");
+                        this.casilla = new Casilla("src/imagenes/none.png");
                     }
                     if ((i + j) % 2 == 0) {
                         casilla.setBackground(new Color(227, 206, 167));
