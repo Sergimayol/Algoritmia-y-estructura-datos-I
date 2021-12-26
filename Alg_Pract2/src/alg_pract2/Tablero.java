@@ -14,39 +14,24 @@ import javax.swing.JPanel;
  */
 public class Tablero extends JPanel {
 
-    private BackTrackingNQueens q;
     private boolean fin = false;
     private Casilla casilla;
-    private static int N;
+    private int[][] tablero;
+    private final int numeroSoluciones;
 
-    public Tablero() {
-        casilla = null;
-        lecturaDatos();
-        q = new BackTrackingNQueens(N);
-        setLayout(new GridLayout(q.getN(), q.getN()));
-    }
-
-    private void lecturaDatos() {
-        String[] datosventana = {"Tamaño tablero: "};
-        try {
-            datosventana = new lecturaDatos(null, datosventana, "Inicio", true).getDatosTexto();
-            if (datosventana[0].isEmpty()) {
-                N = 4;
-            } else {
-                N = Integer.parseInt(datosventana[0]);
-            }
-        } catch (NumberFormatException e) {
-            System.out.println("Error: " + e.toString());
-        }
+    public Tablero(int[][] tablero, int numeroSoluciones) {
+        this.casilla = null;
+        this.tablero = tablero;
+        this.numeroSoluciones = numeroSoluciones;
+        setLayout(new GridLayout(tablero.length, tablero.length));
     }
 
     @Override
     public void paintComponent(Graphics g) {
-        if (q.solveNQ()) {
-            int[][] t = q.getBoard();
-            for (int i = 0; i < q.getN() && !fin; i++) {
-                for (int j = 0; j < q.getN(); j++) {
-                    if (t[i][j] == 1) {
+        if (numeroSoluciones != 0) {
+            for (int i = 0; i < tablero.length && !fin; i++) {
+                for (int j = 0; j < tablero.length; j++) {
+                    if (tablero[i][j] == 1) {
                         //Add reina
                         this.casilla = new Casilla("sprite/queen.png");
                     } else {
@@ -69,9 +54,9 @@ public class Tablero extends JPanel {
             panelAux2.setLayout(new GridLayout(1, 3));
             JLabel etiqueta = new JLabel("      No tiene solución");
             etiqueta.setFont(new Font("Arial", Font.ITALIC, 24));
-            panelAux.setLayout(new GridLayout(q.getN(), q.getN()));
-            for (int i = 0; i < q.getN() && !fin; i++) {
-                for (int j = 0; j < q.getN(); j++) {
+            panelAux.setLayout(new GridLayout(tablero.length, tablero.length));
+            for (int i = 0; i < tablero.length && !fin; i++) {
+                for (int j = 0; j < tablero.length; j++) {
                     this.casilla = new Casilla("sprite/none.png");
                     if ((i + j) % 2 == 0) {
                         casilla.setBackground(new Color(227, 206, 167));
