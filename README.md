@@ -1,1 +1,1 @@
-# Algoritmia y estructura de datos I y II
+# Algoritmia y estructura de datos I
